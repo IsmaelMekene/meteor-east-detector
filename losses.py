@@ -83,3 +83,5 @@ def smooth_l1_loss(prediction_tensor, target_tensor, weights):
       tf.where(abs_diff_lt_1, 0.5 * tf.square(abs_diff), abs_diff - 0.5),
       axis=-1) / n_q) * weights
   return pixel_wise_smooth_l1norm
+
+
