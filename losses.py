@@ -3,30 +3,30 @@ d@te: 21/12/2020 10:55 pm
 
 
 
-def weighted_crossentropy(truemapbidon, scoremapbidon):
+def weighted_crossentropy(truemap, scoremap):
 
 
   ''' this function calculates the weighted crossentropy for maps of shape=(2, 3, 3) '''
 
-  sommede_scoremapbidon = tf.reduce_sum(scoremapbidon, axis=[1, 2]).numpy()  #sum over axis1  axis2
-  sommede_truemapbidon = tf.reduce_sum(truemapbidon, axis=[1, 2]).numpy()  #sum over axis1  axis2
+  sommede_scoremap = tf.reduce_sum(scoremap, axis=[1, 2]).numpy()  #sum over axis1  axis2
+  sommede_truemap = tf.reduce_sum(truemap, axis=[1, 2]).numpy()  #sum over axis1  axis2
 
-  CARD_true_map1 = truemapbidon.shape[1] * truemapbidon.shape[2]   #compute the area of map1 (number of elements)
-  CARD_true_map2 = truemapbidon.shape[1] * truemapbidon.shape[2]   #compute the area of map2 (number of elements)
+  CARD_true_map1 = truemap.shape[1] * truemap.shape[2]   #compute the area of map1 (number of elements)
+  CARD_true_map2 = truemap.shape[1] * truemap.shape[2]   #compute the area of map2 (number of elements)
 
-  sigma_map1 = sommede_truemapbidon[0]  #sum of the elements
-  sigma_map2 = sommede_truemapbidon[1]  #sum of the elements
+  sigma_map1 = sommede_truemap[0]  #sum of the elements
+  sigma_map2 = sommede_truemap[1]  #sum of the elements
 
-  betabidon1 = 1 - (sigma_map1/CARD_true_map1)   #compute the beta factor
-  betabidon2 = 1 - (sigma_map2/CARD_true_map2)   #compute the beta factor
+  beta1 = 1 - (sigma_map1/CARD_true_map1)   #compute the beta factor
+  beta2 = 1 - (sigma_map2/CARD_true_map2)   #compute the beta factor
 
   #Y* * log(Y_hat)
-  ystar_minus_log_yhat = truemapbidon * tf.math.log(scoremapbidon)
+  ystar_minus_log_yhat = truemap * tf.math.log(scoremap)
   red_sum_of_ystar_minus_log_yhat = tf.reduce_sum(ystar_minus_log_yhat, axis=[1, 2]).numpy()
   aver_red_sum_of_ystar_minus_log_yhat = sum(red_sum_of_ystar_minus_log_yhat)/2
 
   #(1- Y*) * (1 - log(Y_hat))
-  oneminusoneminusystar_minus_log_yhat = (1 - truemapbidon) * (1 - tf.math.log(scoremapbidon))
+  oneminusoneminusystar_minus_log_yhat = (1 - truemap) * (1 - tf.math.log(scoremap))
   red_sum_of_oneminusoneminusystar_minus_log_yhat = tf.reduce_sum(oneminusoneminusystar_minus_log_yhat, axis=[1, 2]).numpy()
   aver_red_sum_of_oneminusoneminusystar_minus_log_yhat = sum(red_sum_of_oneminusoneminusystar_minus_log_yhat)/2
 
