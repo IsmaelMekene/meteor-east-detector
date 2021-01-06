@@ -40,10 +40,10 @@ def xtractxml(xmlpath, csvpath):
         leslabels.append(thing.attrib)
     
     
-    dej = {'imageName':lesimages, 'bruh':liste2 }
+    dej = {'imageName':lesimages, 'rectangle':liste2 }
     defo = pd.DataFrame(data=dej)
     
-    fif = defo[['imageName', 'bruh']].set_index(['imageName'])['bruh'].apply(pd.Series).stack().reset_index(level=1, drop=True).reset_index().rename(columns={0:'bruh'})
+    fif = defo[['imageName', 'rectangle']].set_index(['imageName'])['rectangle'].apply(pd.Series).stack().reset_index(level=1, drop=True).reset_index().rename(columns={0:'bruh'})
     
     fif['leslabels'] = leslabels
     fif.columns = ['imageName', 'tags', 'labels']
