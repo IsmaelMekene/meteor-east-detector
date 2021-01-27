@@ -6,36 +6,38 @@ d@te: 21/12/2020 10:55 pm
 def weighted_crossentropy(truemap, scoremap):
 
 
-  ''' this function calculates the weighted crossentropy for maps of shape=(2, 3, 3) '''
+  ''' this function calculates the weighted crossentropy for maps of shape=(n, 3, 3) '''
 
-  sommede_scoremap = tf.reduce_sum(scoremap, axis=[1, 2]).numpy()  #sum over axis1  axis2
-  sommede_truemap = tf.reduce_sum(truemap, axis=[1, 2]).numpy()  #sum over axis1  axis2
+  sommede_scoremap = tf.reduce_sum(scoremap, axis=[1, 2])  #sum over axis1  axis2
+  sommede_truemap = tf.reduce_sum(truemap, axis=[1, 2])  #sum over axis1  axis2
 
-  CARD_true_map1 = truemap.shape[1] * truemap.shape[2]   #compute the area of map1 (number of elements)
-  CARD_true_map2 = truemap.shape[1] * truemap.shape[2]   #compute the area of map2 (number of elements)
+  CARD_true_map = truemap.shape[1] * truemap.shape[2]   #compute the area of maps (number of elements)
+  
 
-  sigma_map1 = sommede_truemap[0]  #sum of the elements
-  sigma_map2 = sommede_truemap[1]  #sum of the elements
+  thebeta = np.empty((len(sommede_truemap)))
+  for i in range(len(sommede_truemap)):
+    sigma_map = sommede_truemap[i]
+    beta = 1 - (sigma_map/CARD_true_map)
+    thebeta[i] = beta
 
-  beta1 = 1 - (sigma_map1/CARD_true_map1)   #compute the beta factor
-  beta2 = 1 - (sigma_map2/CARD_true_map2)   #compute the beta factor
 
   #Y* * log(Y_hat)
   ystar_minus_log_yhat = truemap * tf.math.log(scoremap)
-  red_sum_of_ystar_minus_log_yhat = tf.reduce_sum(ystar_minus_log_yhat, axis=[1, 2]).numpy()
-  aver_red_sum_of_ystar_minus_log_yhat = sum(red_sum_of_ystar_minus_log_yhat)/2
+  red_sum_of_ystar_minus_log_yhat = tf.reduce_sum(ystar_minus_log_yhat, axis=[1, 2])
+  aver_red_sum_of_ystar_minus_log_yhat = tf.reduce_mean(red_sum_of_ystar_minus_log_yhat)
 
   #(1- Y*) * (1 - log(Y_hat))
   oneminusoneminusystar_minus_log_yhat = (1 - truemap) * (1 - tf.math.log(scoremap))
-  red_sum_of_oneminusoneminusystar_minus_log_yhat = tf.reduce_sum(oneminusoneminusystar_minus_log_yhat, axis=[1, 2]).numpy()
-  aver_red_sum_of_oneminusoneminusystar_minus_log_yhat = sum(red_sum_of_oneminusoneminusystar_minus_log_yhat)/2
+  red_sum_of_oneminusoneminusystar_minus_log_yhat = tf.reduce_sum(oneminusoneminusystar_minus_log_yhat, axis=[1, 2])
+  aver_red_sum_of_oneminusoneminusystar_minus_log_yhat = tf.reduce_mean(red_sum_of_oneminusoneminusystar_minus_log_yhat)
 
-  mean_of_beta = (betabidon1 + betabidon2)/2   #average over the batches
+  #average over the batches
+  mean_of_beta = tf.reduce_mean(thebeta)
 
   #apply the final step of the calculation of the formula
   loss_scoremap = -mean_of_beta * aver_red_sum_of_ystar_minus_log_yhat - (1-mean_of_beta) * aver_red_sum_of_oneminusoneminusystar_minus_log_yhat 
 
-
+  #print(loss_scoremap)
   return loss_scoremap
 
 
