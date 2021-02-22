@@ -59,3 +59,11 @@ for epoch in tqdm(range(25)):
   pspnet_model.save_weights(f"weights_for_pspnet/pspnet_model_with_Jaccard_epoch{epoch}.h5")
   print(f"pspnet_model_with_Jaccard_epoch{epoch} saved to weights_for_pspnet")
 
+  
+  
+  
+  
+
+#Visualize on TensorBoard the trend of the losses
+%load_ext tensorboard
+%tensorboard --logdir /content/logs_with_Jaccard_pspnet
