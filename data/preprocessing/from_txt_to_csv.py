@@ -23,6 +23,13 @@ except ImportError:
 txtfiles = glob2.glob('./annotations/*.txt')  #create a list of all txt files
 
 def from_txt_to_csv(txtfiles):
+    '''
+    This function aims to return for each txt file a corresponding csv file that contains the needed information about the labelling
+    Input:
+        txtfiles: the list of the paths of all th txt files
+    Return:
+        It returns a dataframe save to csv containing ('imageName', 'bbox', 'X1', 'Y1', 'X2', 'Y2', 'image_width', 'image_height')
+    '''
     
     x1 = []  #create an empty list
     y1 = []  #create an empty list
